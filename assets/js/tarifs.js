@@ -1,5 +1,5 @@
 /* Tarifs : ouverture, estimateur sur ticket, arguments tamponnés. */
-import { introReperage, rouleau, formaterEuros } from "./effets.js?v=1";
+import { introReperage, rouleau, formaterEuros } from "./effets.js?v=2";
 
 const PROJETS = {
   logo: "Logo, identité visuelle", identite: "Logo, identité visuelle",

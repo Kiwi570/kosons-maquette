@@ -102,6 +102,7 @@ export function noyau() {
       menuBouton.setAttribute("aria-label", ouvert ? "Fermer le menu" : "Ouvrir le menu");
     });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") fermerMenu(); });
+    document.querySelectorAll(".nav a").forEach((a) => a.addEventListener("click", () => setTimeout(fermerMenu, 0)));
   }
 
   /* ----------------------------------------------------------- vitesse de défilement (lissée, selon le temps) */
@@ -127,6 +128,7 @@ export function noyau() {
       const parent = cible.parentElement;
       const st = parent && parent.classList.contains("pin-spacer") ? parent : cible;
       y = st.getBoundingClientRect().top + scrollY;
+      if (st === cible && !cible.classList.contains("plein")) y -= (entete ? entete.offsetHeight : 64);
     }
     y = clamp(y, 0, doc.scrollHeight - innerHeight);
     if (instant || calme) window.scrollTo(0, y);
@@ -136,6 +138,7 @@ export function noyau() {
 
   /* ----------------------------------------------------------- liens : ancres, pages, rideau */
   const rideau = document.querySelector(".rideau");
+  if (rideau && gsap) gsap.set(rideau, { y: 0, yPercent: 101 });
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a[href]");
     if (!a || e.defaultPrevented) return;
@@ -162,14 +165,14 @@ export function noyau() {
     gsap.fromTo(rideau, { yPercent: 101 }, { yPercent: 0, duration: .55, ease: "power3.inOut", onComplete: () => { location.href = u.href; } });
   });
   window.addEventListener("pageshow", (e) => {
-    if (e.persisted && rideau && gsap) gsap.set(rideau, { yPercent: 101 });
+    if (e.persisted && rideau && gsap) gsap.set(rideau, { y: 0, yPercent: 101 });
   });
   ctx.rideauOuvrir = function () {
     let venu = false;
     try { venu = sessionStorage.getItem(CLE_RIDEAU) === "1"; sessionStorage.removeItem(CLE_RIDEAU); } catch (e) {}
     if (!venu || !rideau || !gsap || calme) return 0;
-    gsap.set(rideau, { yPercent: 0 });
-    gsap.to(rideau, { yPercent: -101, duration: .7, ease: "power3.inOut", delay: .05 });
+    gsap.set(rideau, { y: 0, yPercent: 0 });
+    gsap.to(rideau, { yPercent: -101, duration: .7, ease: "power3.inOut", delay: .05, onComplete: () => gsap.set(rideau, { yPercent: 101 }) });
     return .35;
   };
 
@@ -275,8 +278,9 @@ function curseurEtLoupe(ctx) {
     if (x < z.left || x > z.left + z.width || y < z.top || y > z.top + z.height) { loupe.classList.remove("actif"); anneau.classList.remove("cache"); return; }
     loupe.classList.add("actif"); anneau.classList.add("cache");
     loupe.style.transform = `translate(${x}px, ${y}px)`;
-    loupe.style.backgroundSize = `${z.width * ZOOM}px ${z.height * ZOOM}px`;
-    loupe.style.backgroundPosition = `${-((x - z.left) * ZOOM - R)}px ${-((y - z.top) * ZOOM - R)}px`;
+    const taille = `${z.width * ZOOM}px ${z.height * ZOOM}px`, pos = `${-((x - z.left) * ZOOM - R)}px ${-((y - z.top) * ZOOM - R)}px`;
+    loupe.style.backgroundSize = `${taille}, ${taille}`;
+    loupe.style.backgroundPosition = `${pos}, ${pos}`;
   }
   window.addEventListener("pointermove", (e) => {
     if (e.pointerType !== "mouse") return;
@@ -285,7 +289,12 @@ function curseurEtLoupe(ctx) {
     const cible = e.target;
     const img = cible.closest ? cible.closest("img[data-loupe]") : null;
     if (img) {
-      if (img !== imgLoupe) { imgLoupe = img; loupe.style.backgroundImage = `url("${img.dataset.loupe}")`; }
+      if (img !== imgLoupe) {
+        imgLoupe = img;
+        const petit = img.currentSrc || img.src;
+        loupe.style.backgroundImage = `url("${img.dataset.loupe}"), url("${petit}")`;
+        if (!img._grande) { img._grande = new Image(); img._grande.src = img.dataset.loupe; }
+      }
       majLoupe(e.clientX, e.clientY);
     } else if (imgLoupe) {
       imgLoupe = null; loupe.classList.remove("actif"); anneau.classList.remove("cache");

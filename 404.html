@@ -26,10 +26,10 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=1">
-<link rel="modulepreload" href="/assets/js/main.js?v=1">
-<link rel="modulepreload" href="/assets/js/noyau.js?v=1">
-<link rel="modulepreload" href="/assets/js/effets.js?v=1">
+<link rel="stylesheet" href="/assets/css/site.css?v=2">
+<link rel="modulepreload" href="/assets/js/main.js?v=2">
+<link rel="modulepreload" href="/assets/js/noyau.js?v=2">
+<link rel="modulepreload" href="/assets/js/effets.js?v=2">
 <script>
 (function(){var d=document.documentElement,c=null;try{c=localStorage.getItem("kosons-calme")}catch(e){}
 if(c==="1"||(c===null&&window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches))d.classList.add("calme");
@@ -41,7 +41,7 @@ setTimeout(function(){d.classList.remove("chargement")},2500);})();
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="encre-irreguliere"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter></svg>
 <header class="entete">
 <a class="marque" href="/" aria-label="Kosons, atelier graphique, accueil"><img src="/assets/img/identite/k-96.webp" width="96" height="96" alt=""><span><b>KOSONS</b><i>Atelier graphique</i></span></a>
-<nav class="nav" id="nav" aria-label="Navigation principale"><a href="/">Atelier</a><a href="/realisations">Réalisations</a><a href="/tarifs">Tarifs</a><a href="/#devis">Devis</a></nav>
+<nav class="nav" id="nav" aria-label="Navigation principale"><a href="/">Atelier</a><a href="/realisations">Réalisations</a><a href="/tarifs">Tarifs</a><a href="/#devis">Devis</a><div class="nav-plus"><a class="bouton" href="/#devis"><span class="point" aria-hidden="true"></span>Demander un devis</a><p>virginie.kosons@gmail.com<br>06 21 39 17 27<br>Béziers, Hérault</p></div></nav>
 <button class="bouton-calme" type="button" aria-pressed="false" title="Réduire les animations"><span class="interrupteur" aria-hidden="true"></span><span class="long">Mode calme</span><span class="court">Calme</span></button>
 <a class="bouton aimant" href="/#devis"><span class="point" aria-hidden="true"></span>Demander un devis</a>
 <button class="menu-bouton" type="button" aria-expanded="false" aria-controls="nav" aria-label="Ouvrir le menu"><span aria-hidden="true"></span></button>
@@ -59,7 +59,7 @@ setTimeout(function(){d.classList.remove("chargement")},2500);})();
 </main>
 <footer class="pied" id="pied">
 <div class="cadre">
-<div class="marque-pied"><img class="grand-k" src="/assets/img/identite/logo-kosons-480.webp" srcset="/assets/img/identite/logo-kosons-240.webp 240w, /assets/img/identite/logo-kosons-480.webp 480w" sizes="210px" width="1451" height="1492" alt="Kosons, atelier graphique" loading="lazy" style="filter:brightness(0) invert(.93) sepia(.1)"></div>
+<div class="marque-pied" data-rouleau><img class="grand-k" src="/assets/img/identite/logo-kosons-480.webp" srcset="/assets/img/identite/logo-kosons-240.webp 240w, /assets/img/identite/logo-kosons-480.webp 480w" sizes="210px" width="1451" height="1492" alt="Kosons, atelier graphique" loading="lazy" style="filter:brightness(0) invert(.93) sepia(.1)"></div>
 <div><h2>Contact</h2><ul><li><a href="mailto:virginie.kosons@gmail.com">virginie.kosons@gmail.com</a></li><li><a href="tel:+33621391727">06 21 39 17 27</a></li><li>Béziers, Hérault</li></ul></div>
 <div><h2>Pages</h2><ul><li><a href="/">L’atelier</a></li><li><a href="/realisations">Réalisations</a></li><li><a href="/tarifs">Tarifs</a></li><li><a href="/#devis">Demander un devis</a></li></ul></div>
 <div><h2>Suivre l’atelier</h2><ul><li><a href="https://www.instagram.com/kosonsateliergraphique/" rel="noopener" target="_blank">Instagram</a></li><li><a href="https://www.facebook.com/ateliergraphiquekosons" rel="noopener" target="_blank">Facebook</a></li></ul></div>
@@ -71,6 +71,6 @@ setTimeout(function(){d.classList.remove("chargement")},2500);})();
 <div class="rideau" aria-hidden="true"><img class="k" src="/assets/img/identite/k-192.webp" width="192" height="192" alt=""></div>
 <script defer src="/assets/js/lib/gsap.min.js"></script>
 <script defer src="/assets/js/lib/ScrollTrigger.min.js"></script>
-<script type="module" src="/assets/js/main.js?v=1"></script>
+<script type="module" src="/assets/js/main.js?v=2"></script>
 </body>
 </html>

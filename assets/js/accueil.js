@@ -1,7 +1,7 @@
 /* Accueil : ouverture, ruban, nuancier, méthode, planche-contact, bon de commande. */
-import { introReperage, tracerCoupes, rouleau, tamponner, aLEntree } from "./effets.js?v=1";
-import { papierVivant } from "./papier.js?v=1";
-import { amortir, clamp } from "./noyau.js?v=1";
+import { introReperage, tracerCoupes, rouleau, tamponner, aLEntree } from "./effets.js?v=2";
+import { papierVivant } from "./papier.js?v=2";
+import { amortir, clamp } from "./noyau.js?v=2";
 
 const CONDITION_EPINGLE = "(min-width: 900px) and (min-height: 520px)";
 
@@ -107,11 +107,15 @@ function nuancier(ctx) {
         onUpdate: (s) => { if (jauge) jauge.style.transform = `scaleX(${s.progress})`; },
       },
     });
-    const angle = (i) => (i - (n - 1) / 2) * 5 - 3;
-    const lever = (i) => -(lames[i].offsetWidth / 2) * Math.sin(Math.abs(angle(i)) * Math.PI / 180) - 6;
-    tl.fromTo(lames, { x: (i) => ecart(i), y: (i) => lever(i), rotation: angle }, { x: 0, y: 0, rotation: 0, duration: 1, stagger: { each: .02, from: "end" } }, 0)
-      .fromTo(piste, { x: 0 }, { x: () => -distance(), duration: 1.4 }, 1.05);
-    return () => { sec.classList.remove("epingle"); gsap.set([piste, ...lames], { clearProps: "transform" }); };
+    /* nuancier fermé : lames empilées en éventail, la première dessus, légèrement réduites pour rester sous le titre */
+    const angle = (i) => (i - (n - 1) / 2) * 6 - 4;
+    const ECH = .86;
+    const lever = (i) => -(lames[i].offsetHeight * .15 * (1 - ECH)) - (lames[i].offsetWidth / 2) * ECH * Math.sin(Math.abs(angle(i)) * Math.PI / 180) - 4;
+    gsap.set(lames, { zIndex: (i) => n - i });
+    tl.fromTo(lames, { x: (i) => ecart(i), y: (i) => lever(i), rotation: angle, scale: ECH }, { x: 0, y: 0, rotation: 0, scale: 1, duration: 1, stagger: { each: .02, from: "start" } }, 0)
+      .fromTo(piste, { x: 0 }, { x: () => -distance(), duration: 1.4 }, 1.05)
+      .to({}, { duration: .3 });
+    return () => { sec.classList.remove("epingle"); gsap.set([piste, ...lames], { clearProps: "transform,zIndex" }); };
   });
   mm.add("(max-width: 899px), (max-height: 519px)", () => {
     const tl = gsap.timeline({ paused: true });

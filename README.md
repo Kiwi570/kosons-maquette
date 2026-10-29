@@ -1,4 +1,4 @@
-# Kosons, maquette v1
+# Kosons, maquette v2
 
 Maquette du futur site de Kosons, atelier graphique de Virginie à Béziers (site actuel : kosons.fr).
 Direction artistique « L'Imprimerie » : papier, encres pétrole et rouge, repérage des plaques, repères de coupe, tampons.
@@ -36,9 +36,17 @@ assets/og/                   images de partage 1200×630
 
 ## Mise à jour (cache)
 
-Les pages appellent les styles et scripts avec `?v=1`, à l'identique dans les pages et dans les `import` JavaScript.
+Les pages appellent les styles et scripts avec `?v=2`, à l'identique dans les pages et dans les `import` JavaScript.
 À chaque nouvelle version livrée, ce numéro change partout. Aucune règle Cache-Control dans `vercel.json` :
 Vercel fait revérifier chaque fichier à chaque visite.
+
+## Historique
+
+- v2 : transition entre pages réparée, ancres placées sous l'en-tête, loupe immédiate, menu téléphone plein écran avec contact,
+  cartes de prestations cliquables vers les tarifs et puces de nuancier lisibles, éventail qui ne couvre plus le titre,
+  méthode plus lisible, ouverture téléphone recomposée, tarifs téléphone avec le nuancier visible, images des familles
+  de tarifs à la bonne taille, contrastes et tailles de texte conformes, tampon du reçu repositionné.
+- v1 : première version.
 
 ## À retirer à la mise en ligne définitive
 

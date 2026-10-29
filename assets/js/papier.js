@@ -5,7 +5,7 @@ import { Program } from "./lib/ogl/core/Program.js";
 import { Mesh } from "./lib/ogl/core/Mesh.js";
 import { Triangle } from "./lib/ogl/extras/Triangle.js";
 
-const MAX = 16;
+const MAX = 24;
 const VIE = 2.8;
 
 const vertex = /* glsl */ `
@@ -129,7 +129,7 @@ export function papierVivant(section) {
     const x = e.clientX - r.left, y = e.clientY - r.top;
     if (dernier) {
       const d = Math.hypot(x - dernier.x, y - dernier.y);
-      if (d < 26) return;
+      if (d < 30) return;
       ajouter(x, y, Math.min(70, 34 + d * .25));
     } else ajouter(x, y, 44);
     dernier = { x, y };

@@ -1,15 +1,15 @@
 /* Kosons — point d'entrée. Tous les modules du site portent le même numéro de version. */
-import { noyau } from "./noyau.js?v=1";
-import { effets, introReperage, preparerReperage } from "./effets.js?v=1";
+import { noyau } from "./noyau.js?v=2";
+import { effets, introReperage, preparerReperage } from "./effets.js?v=2";
 
 const ctx = noyau();
 await ctx.pret;
 effets(ctx);
 
 try {
-  if (ctx.page === "accueil") (await import("./accueil.js?v=1")).accueil(ctx);
-  else if (ctx.page === "realisations") (await import("./realisations.js?v=1")).realisations(ctx);
-  else if (ctx.page === "tarifs") (await import("./tarifs.js?v=1")).tarifs(ctx);
+  if (ctx.page === "accueil") (await import("./accueil.js?v=2")).accueil(ctx);
+  else if (ctx.page === "realisations") (await import("./realisations.js?v=2")).realisations(ctx);
+  else if (ctx.page === "tarifs") (await import("./tarifs.js?v=2")).tarifs(ctx);
   else autres(ctx);
 } catch (e) {
   console.error(e);
