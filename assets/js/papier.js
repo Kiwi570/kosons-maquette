@@ -6,7 +6,7 @@ import { Mesh } from "./lib/ogl/core/Mesh.js";
 import { Triangle } from "./lib/ogl/extras/Triangle.js";
 
 const MAX = 24;
-const VIE = 2.8;
+const VIE = 1.7;
 
 const vertex = /* glsl */ `
 attribute vec2 uv;
@@ -14,6 +14,7 @@ attribute vec2 position;
 void main() { gl_Position = vec4(position, 0.0, 1.0); }
 `;
 
+/* trame d'imprimerie : des points pétrole dont le diamètre suit l'encre déposée par le curseur */
 const fragment = /* glsl */ `
 precision highp float;
 uniform float uTemps;
@@ -28,12 +29,6 @@ float bruit(vec2 p) {
   vec2 u = f * f * (3.0 - 2.0 * f);
   return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
 }
-float fbm(vec2 p) {
-  float v = 0.0, a = 0.5;
-  mat2 r = mat2(0.8, -0.6, 0.6, 0.8);
-  for (int i = 0; i < 4; i++) { v += a * bruit(p); p = r * p * 2.03 + 3.1; a *= 0.5; }
-  return v;
-}
 
 void main() {
   vec2 p = gl_FragCoord.xy;
@@ -41,28 +36,29 @@ void main() {
   for (int i = 0; i < ${MAX}; i++) {
     if (i >= uNombre) break;
     vec4 q = uPoints[i];
-    float age = uTemps - q.z;
-    float rayon = q.w * (1.0 + age * 0.55);
-    proche = min(proche, length(p - q.xy) - rayon * 1.5);
+    proche = min(proche, length(p - q.xy) - q.w * 1.25);
   }
   if (proche > 0.0) discard;
 
-  vec2 w = p / (95.0 * uDpr);
-  vec2 deforme = vec2(fbm(w + uTemps * 0.04), fbm(w + 7.3 - uTemps * 0.03)) - 0.5;
   float champ = 0.0;
+  float bord = bruit(p / (38.0 * uDpr)) - 0.5;
   for (int i = 0; i < ${MAX}; i++) {
     if (i >= uNombre) break;
     vec4 q = uPoints[i];
     float age = uTemps - q.z;
     float vie = clamp(1.0 - age / ${VIE.toFixed(1)}, 0.0, 1.0);
-    float rayon = q.w * (1.0 + age * 0.55);
-    float d = length(p + deforme * rayon * 1.1 - q.xy);
-    champ += vie * smoothstep(rayon, rayon * 0.15, d);
+    vie = vie * vie * (3.0 - 2.0 * vie);
+    float rayon = q.w * (0.85 + age * 0.35);
+    float d = length(p - q.xy) + bord * rayon * 0.45;
+    champ += vie * smoothstep(rayon, rayon * 0.2, d);
   }
-  float fibres = fbm(p / (5.0 * uDpr)) * 0.35 + fbm(vec2(p.x / (40.0 * uDpr), p.y / (2.0 * uDpr))) * 0.18;
-  float encre = smoothstep(0.32, 0.62, champ + fibres * 0.45 - 0.12);
-  float bord = smoothstep(0.3, 0.4, champ) - smoothstep(0.4, 0.7, champ);
-  float a = clamp(encre * 0.34 + bord * 0.22, 0.0, 0.62);
+  champ = clamp(champ, 0.0, 1.0);
+
+  float cellule = 6.0 * uDpr;
+  mat2 rot = mat2(0.9659, -0.2588, 0.2588, 0.9659);
+  vec2 c = fract(rot * p / cellule) - 0.5;
+  float r = sqrt(champ) * 0.6;
+  float a = smoothstep(r + 0.06, r - 0.06, length(c)) * step(0.04, champ) * 0.78;
   gl_FragColor = vec4(uEncre * a, a);
 }
 `;
@@ -129,9 +125,9 @@ export function papierVivant(section) {
     const x = e.clientX - r.left, y = e.clientY - r.top;
     if (dernier) {
       const d = Math.hypot(x - dernier.x, y - dernier.y);
-      if (d < 30) return;
-      ajouter(x, y, Math.min(70, 34 + d * .25));
-    } else ajouter(x, y, 44);
+      if (d < 22) return;
+      ajouter(x, y, Math.min(58, 30 + d * .2));
+    } else ajouter(x, y, 36);
     dernier = { x, y };
   }, { passive: true });
   section.addEventListener("pointerdown", (e) => {

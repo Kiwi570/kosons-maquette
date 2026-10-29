@@ -1,7 +1,6 @@
 /* Accueil : ouverture, ruban, nuancier, méthode, planche-contact, bon de commande. */
-import { introReperage, tracerCoupes, rouleau, tamponner, aLEntree } from "./effets.js?v=3";
-import { papierVivant } from "./papier.js?v=3";
-import { amortir, clamp } from "./noyau.js?v=3";
+import { introReperage, tracerCoupes, rouleau, tamponner, aLEntree } from "./effets.js?v=4";
+import { amortir, clamp } from "./noyau.js?v=4";
 
 const CONDITION_EPINGLE = "(min-width: 900px) and (min-height: 520px)";
 
@@ -29,7 +28,6 @@ function ouverture(ctx, t0) {
   const intro = sec.querySelectorAll("[data-intro]");
   const pied = sec.querySelector(".pied-ouverture");
   const mire = sec.querySelector(".mire");
-  const encre = papierVivant(sec);
 
   gsap.set([tirP, tirS, pied, mire, point], { autoAlpha: 0 });
   gsap.set(intro, { clipPath: "inset(-4% 100% -8% 0)" });
@@ -45,7 +43,11 @@ function ouverture(ctx, t0) {
     .fromTo(point, { autoAlpha: 0, y: () => -innerHeight * .5, scaleX: .8, scaleY: 1.25 }, { autoAlpha: 1, y: 0, duration: .42, ease: "power2.in" }, .95)
     .to(point, { scaleX: 1.45, scaleY: .62, duration: .07, ease: "power1.out" })
     .to(point, { scaleX: 1, scaleY: 1, duration: .7, ease: "elastic.out(1, .35)" })
-    .add(() => { if (encre) { encre.demarrer(); const r = point.getBoundingClientRect(), s = sec.getBoundingClientRect(); encre.goutte(r.left - s.left + r.width / 2, r.top - s.top + r.height / 2, 46); } }, 1.4);
+    /* la trame d'encre (WebGL) n'est chargée qu'une fois l'ouverture jouée, et seulement à la souris */
+    .add(() => {
+      if (!ctx.finPointeur) return;
+      import("./papier.js?v=4").then((m) => { const encre = m.papierVivant(sec); if (encre) encre.demarrer(); }).catch(() => {});
+    }, 1.6);
   intro.forEach((el, i) => tl.add(rouleau(el, gsap, { duree: .8 }), 1.05 + i * .2));
   tl.fromTo(pied, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .6 }, 1.5);
   tl.eventCallback("onComplete", () => { window.kosonsOuverture = performance.now(); });
@@ -55,30 +57,30 @@ function ouverture(ctx, t0) {
   gsap.fromTo(sec.querySelector(".tirages"), { yPercent: 0 }, { yPercent: -10, ease: "none", scrollTrigger: { trigger: sec, start: "top top", end: "bottom top", scrub: .5 } });
 }
 
-/* ------------------------------------------------------------------ ruban : vitesse et largeur liées au défilement */
+/* ------------------------------------------------------------------ ruban : vitesse et inclinaison liées au défilement */
 function ruban(ctx) {
   const { gsap } = ctx;
   const el = document.querySelector(".ruban");
   if (!el) return;
   const piste = el.querySelector(".ruban-piste");
-  const mots = el.querySelectorAll(".ruban-mot");
-  let x = 0, sens = -1, visible = true, largeur = 0, l = 100;
-  const mesurer = () => { largeur = piste.firstElementChild.offsetWidth; };
-  mesurer(); window.addEventListener("resize", mesurer);
+  let x = 0, sens = -1, visible = true, largeur = 0, incl = 0;
+  /* la boucle se fait sur la largeur exacte d'un groupe ; remesurée si les vignettes ou la fenêtre changent */
+  const mesurer = () => { largeur = piste.firstElementChild.getBoundingClientRect().width; };
+  mesurer();
+  window.addEventListener("resize", mesurer);
+  piste.querySelectorAll("img").forEach((i) => { if (!i.complete) i.addEventListener("load", mesurer, { once: true }); });
   if ("IntersectionObserver" in window) new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(el);
-  const poserX = gsap.quickSetter(piste, "x", "px");
+  const poser = gsap.quickSetter(piste, "css");
   gsap.ticker.add((t, ms) => {
     if (!visible || !largeur) return;
-    const dt = Math.max(1, ms) / 1000;
+    const dt = Math.min(.05, Math.max(1, ms) / 1000);
     const v = ctx.vitesse();
     if (Math.abs(v) > 40) sens = v > 0 ? -1 : 1;
     const vit = 70 + Math.min(900, Math.abs(v) * .35);
     x += sens * vit * dt;
-    if (x <= -largeur) x += largeur; else if (x > 0) x -= largeur;
-    poserX(x);
-    const cible = clamp(100 + Math.abs(v) * .02, 100, 125);
-    const nl = amortir(l, cible, 6, dt);
-    if (Math.abs(nl - l) > .05) { l = nl; mots.forEach((m) => { m.style.fontStretch = l.toFixed(1) + "%"; }); }
+    x = ((x % largeur) - largeur) % largeur;
+    incl = amortir(incl, clamp(-v * .004, -8, 8), 8, dt);
+    poser({ x, skewX: incl });
   });
 }
 

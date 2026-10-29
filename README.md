@@ -1,4 +1,4 @@
-# Kosons, maquette v3
+# Kosons, maquette v4
 
 Maquette du futur site de Kosons, atelier graphique de Virginie à Béziers (site actuel : kosons.fr).
 Direction artistique « L'Imprimerie » : papier, encres pétrole et rouge, repérage des plaques, repères de coupe, tampons.
@@ -18,11 +18,11 @@ Site statique (HTML, CSS, JavaScript), sans étape de construction, prêt pour V
 ## Structure
 
 ```
-assets/css/site.css          styles (version ?v=1)
+assets/css/site.css          styles
 assets/js/main.js            point d'entrée (module)
 assets/js/noyau.js           mode calme, mesures, défilement fluide, curseur et loupe, transitions
 assets/js/effets.js          repérage, repères de coupe, rouleau encreur, tampons, compteurs
-assets/js/papier.js          papier vivant WebGL (OGL)
+assets/js/papier.js          traînée d'encre tramée au pointeur, WebGL (OGL), chargée à la demande
 assets/js/accueil.js         accueil : ouverture, ruban, nuancier et méthode épinglés, bon de commande
 assets/js/realisations.js    filtres (GSAP Flip), visionneuse
 assets/js/tarifs.js          estimateur
@@ -36,12 +36,20 @@ assets/og/                   images de partage 1200×630
 
 ## Mise à jour (cache)
 
-Les pages appellent les styles et scripts avec `?v=3`, à l'identique dans les pages et dans les `import` JavaScript.
+Les pages appellent les styles et scripts avec `?v=4`, à l'identique dans les pages et dans les `import` JavaScript.
 À chaque nouvelle version livrée, ce numéro change partout. Aucune règle Cache-Control dans `vercel.json` :
 Vercel fait revérifier chaque fichier à chaque visite.
 
 ## Historique
 
+- v4 : effets et transitions revus image par image. Rideau présent dès l'arrivée sur la nouvelle page (plus de page
+  blanche ni de saut), page révélée seulement quand polices, image d'ouverture et animations sont prêtes, traînée
+  d'encre en trame plus fine et chargée après l'ouverture, ruban sans à-coup à chaque tour, repérage des titres
+  proportionné à leur taille et plus discret au doigt, titres ligne à ligne sur toutes les pages, rouleau encreur
+  ligne par ligne dans les tarifs. Réalisations : vignettes en fondu, filtres qui ne vident plus la page, visionneuse
+  qui s'ouvre et se referme depuis la vignette, flèches du clavier fiables, loupe qui suit l'image affichée et
+  s'éteint à la fermeture. Cartes de prestations entières en mode calme et au téléphone, onglets sans flash gris,
+  surbrillance bleue au toucher supprimée.
 - v3 : ouverture de l'accueil recomposée pour chaque format (téléphone, petit téléphone, tablette, fenêtre étroite,
   téléphone à l'horizontale, grand écran) : plus aucun chevauchement entre photos et boutons, cadre de la bouteille
   à la bonne proportion, légende posée sur le tirage ; ouverture des tarifs compacte sur les petits écrans.

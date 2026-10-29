@@ -1,5 +1,5 @@
 /* Effets d'imprimerie : repères de coupe, repérage des plaques, rouleau encreur, tampons, compteurs. */
-import { clamp } from "./noyau.js?v=3";
+import { clamp } from "./noyau.js?v=4";
 
 const SVG = "http://www.w3.org/2000/svg";
 const COINS = ["hg", "hd", "bg", "bd"];
@@ -54,10 +54,10 @@ export function rouleau(el, gsap, opts = {}) {
   if (!barre) { barre = document.createElement("span"); barre.className = "barre-rouleau"; barre.setAttribute("aria-hidden", "true"); el.appendChild(barre); }
   const d = opts.duree || .95;
   const tl = gsap.timeline({ delay: opts.delai || 0, paused: !!opts.entree })
-    .fromTo(el, { clipPath: "inset(-4% 100% -8% 0)", filter: "blur(1.5px)" }, { clipPath: "inset(-4% 0% -8% 0)", filter: "blur(0px)", duration: d, ease: "power2.inOut" }, 0)
+    .fromTo(el, { clipPath: "inset(-4% 100% -8% 0)" }, { clipPath: "inset(-4% 0% -8% 0)", duration: d, ease: "power2.inOut" }, 0)
     .fromTo(barre, { x: -12, opacity: 1 }, { x: () => el.offsetWidth - 12, opacity: 1, duration: d, ease: "power2.inOut" }, 0)
     .to(barre, { opacity: 0, duration: .25 }, d - .15)
-    .set(el, { clearProps: "clipPath,filter" });
+    .set(el, { clearProps: "clipPath" });
   if (opts.entree) aLEntree(tl, opts.entree);
   return tl;
 }
@@ -103,12 +103,15 @@ export function effets(ctx) {
   /* titres ligne à ligne */
   document.querySelectorAll("[data-lignes]").forEach((el) => {
     if (window.SplitText) {
+      /* un seul déclencheur par titre ; à chaque nouveau découpage (polices, redimensionnement), l'animation est recréée au même état */
       window.SplitText.create(el, {
         type: "lines", mask: "lines", autoSplit: true,
         onSplit(self) {
-          if (el._vu) return;
-          const a = gsap.fromTo(self.lines, { yPercent: 108 }, { yPercent: 0, duration: 1, ease: "power4.out", stagger: .09, paused: true, onStart: () => { el._vu = true; } });
-          return aLEntree(a, { trigger: el, start: "top 88%" });
+          const a = gsap.fromTo(self.lines, { yPercent: 108 }, { yPercent: 0, duration: 1, ease: "power4.out", stagger: .09, paused: true });
+          if (el._vu) a.progress(1);
+          el._anim = a;
+          if (!el._st) el._st = ScrollTrigger.create({ trigger: el, start: "top 88%", once: true, onEnter: () => { el._vu = true; el._anim.play(); } });
+          return a;
         },
       });
     } else {
@@ -174,11 +177,16 @@ export function effets(ctx) {
     const io = new IntersectionObserver((es) => es.forEach((e) => { const t = titres.find((x) => x.el === e.target); if (t) t.vu = e.isIntersecting; }));
     titres.forEach((t) => io.observe(t.el));
   }
+  /* amplitude proportionnelle à la taille du titre, plus discrète au doigt */
+  const facteur = ctx.finPointeur ? 1 : .55;
+  const amplitude = (t) => { if (!t.max) t.max = clamp(parseFloat(getComputedStyle(t.el).fontSize) * .07, 2, 7) * facteur; return t.max; };
+  window.addEventListener("resize", () => titres.forEach((t) => { t.max = 0; }));
   let d = 0;
   gsap.ticker.add((tps, ms) => {
     const dt = Math.max(1, ms) / 1000;
-    const cible = clamp(ctx.vitesse() * .0045, -9, 9);
+    const cible = clamp(ctx.vitesse() * .0012, -1, 1);
     d += (cible - d) * (1 - Math.exp(-10 * dt));
-    titres.forEach((t) => { if (t.vu && t.rep.libre) t.rep.decaler(d); });
+    if (Math.abs(d) < .002) d = 0;
+    titres.forEach((t) => { if (t.vu && t.rep.libre) t.rep.decaler(d * amplitude(t)); });
   });
 }

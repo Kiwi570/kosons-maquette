@@ -45,6 +45,7 @@ export function noyau() {
     attente = setTimeout(() => { mesurer(); }, 80);
   });
   ctx.mesurer = mesurer;
+  ctx.enteteH = () => (entete ? entete.offsetHeight : 64);
 
   /* ----------------------------------------------------------- mode calme */
   const boutonCalme = document.querySelector(".bouton-calme");
@@ -138,7 +139,11 @@ export function noyau() {
 
   /* ----------------------------------------------------------- liens : ancres, pages, rideau */
   const rideau = document.querySelector(".rideau");
-  if (rideau && gsap) gsap.set(rideau, { y: 0, yPercent: 101 });
+  const arrivee = doc.classList.contains("rideau-actif");
+  if (rideau && gsap) { gsap.set(rideau, { y: 0, yPercent: arrivee && !calme ? 0 : 101 }); doc.classList.remove("rideau-actif"); }
+  /* texture du rideau décodée à l'avance, pour qu'il ne soit jamais un aplat vide */
+  const precharger = () => { ["/assets/img/ambiance/accueil-ouverture-papier-640.webp", "/assets/img/identite/k-192.webp"].forEach((src) => { const i = new Image(); i.src = src; if (i.decode) i.decode().catch(() => {}); }); };
+  if (document.readyState === "complete") setTimeout(precharger, 800); else window.addEventListener("load", () => setTimeout(precharger, 800));
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a[href]");
     if (!a || e.defaultPrevented) return;
@@ -163,17 +168,18 @@ export function noyau() {
     fermerMenu();
     try { sessionStorage.setItem(CLE_RIDEAU, "1"); } catch (er) {}
     gsap.fromTo(rideau, { yPercent: 101 }, { yPercent: 0, duration: .55, ease: "power3.inOut", onComplete: () => { location.href = u.href; } });
+    gsap.fromTo(rideau.querySelector(".k"), { scale: .6, rotation: -20, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: .45, delay: .2, ease: "back.out(2)" });
   });
   window.addEventListener("pageshow", (e) => {
     if (e.persisted && rideau && gsap) gsap.set(rideau, { y: 0, yPercent: 101 });
   });
+  try { sessionStorage.removeItem(CLE_RIDEAU); } catch (e) {}
   ctx.rideauOuvrir = function () {
-    let venu = false;
-    try { venu = sessionStorage.getItem(CLE_RIDEAU) === "1"; sessionStorage.removeItem(CLE_RIDEAU); } catch (e) {}
-    if (!venu || !rideau || !gsap || calme) return 0;
+    if (!arrivee || ctx._rideauLeve || !rideau || !gsap || calme) return 0;
+    ctx._rideauLeve = true;
     gsap.set(rideau, { y: 0, yPercent: 0 });
-    gsap.to(rideau, { yPercent: -101, duration: .7, ease: "power3.inOut", delay: .05, onComplete: () => gsap.set(rideau, { yPercent: 101 }) });
-    return .35;
+    gsap.to(rideau, { yPercent: -101, duration: .75, ease: "power3.inOut", delay: .08, onComplete: () => gsap.set(rideau, { yPercent: 101 }) });
+    return .4;
   };
 
   /* ----------------------------------------------------------- barre mobile masquée sur le devis et le pied */
@@ -191,12 +197,12 @@ export function noyau() {
   if (finPointeur && !calme && gsap) curseurEtLoupe(ctx);
 
   /* ----------------------------------------------------------- prêt : polices chargées (délai court) */
-  ctx.pret = new Promise((resoudre) => {
-    const fin = () => { doc.classList.remove("chargement"); resoudre(); };
-    if (document.fonts && document.fonts.ready) {
-      Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 900))]).then(fin);
-    } else fin();
-  });
+  const delai = (ms) => new Promise((r) => setTimeout(r, ms));
+  const polices = document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, delai(900)]) : Promise.resolve();
+  const premiere = document.querySelector("main .ambiance img, main img[fetchpriority]");
+  const image = premiere && premiere.decode ? Promise.race([premiere.decode().catch(() => {}), delai(1400)]) : Promise.resolve();
+  ctx.pret = Promise.all([polices, image]);
+  ctx.reveler = function () { doc.classList.remove("chargement"); };
   return ctx;
 }
 
@@ -262,7 +268,7 @@ function curseurEtLoupe(ctx) {
   const ax = gsap.quickTo(anneau, "x", { duration: .35, ease: "power3" });
   const ay = gsap.quickTo(anneau, "y", { duration: .35, ease: "power3" });
   const ZOOM = 2.5, R = 95;
-  let imgLoupe = null;
+  let imgLoupe = null, px = -1, py = -1;
 
   function zoneImage(img) {
     const r = img.getBoundingClientRect();
@@ -282,26 +288,34 @@ function curseurEtLoupe(ctx) {
     loupe.style.backgroundSize = `${taille}, ${taille}`;
     loupe.style.backgroundPosition = `${pos}, ${pos}`;
   }
+  function eteindre() { imgLoupe = null; loupe.classList.remove("actif"); anneau.classList.remove("cache"); }
+  function evaluer(cible, x, y, force) {
+    const img = cible && cible.closest ? cible.closest("img[data-loupe]") : null;
+    if (img) {
+      const source = img.dataset.loupe + "|" + (img.currentSrc || img.src);
+      if (img !== imgLoupe || force || img._source !== source) {
+        imgLoupe = img; img._source = source;
+        const petit = img.currentSrc || img.src;
+        loupe.style.backgroundImage = `url("${img.dataset.loupe}"), url("${petit}")`;
+        const g = new Image(); g.src = img.dataset.loupe;
+      }
+      majLoupe(x, y);
+    } else if (imgLoupe) eteindre();
+    anneau.classList.toggle("sur-lien", !!(cible && cible.closest && cible.closest("a, button, summary, label, [role=button]")));
+  }
   window.addEventListener("pointermove", (e) => {
     if (e.pointerType !== "mouse") return;
     anneau.classList.add("actif");
-    ax(e.clientX); ay(e.clientY);
-    const cible = e.target;
-    const img = cible.closest ? cible.closest("img[data-loupe]") : null;
-    if (img) {
-      if (img !== imgLoupe) {
-        imgLoupe = img;
-        const petit = img.currentSrc || img.src;
-        loupe.style.backgroundImage = `url("${img.dataset.loupe}"), url("${petit}")`;
-        if (!img._grande) { img._grande = new Image(); img._grande.src = img.dataset.loupe; }
-      }
-      majLoupe(e.clientX, e.clientY);
-    } else if (imgLoupe) {
-      imgLoupe = null; loupe.classList.remove("actif"); anneau.classList.remove("cache");
-    }
-    anneau.classList.toggle("sur-lien", !!(cible.closest && cible.closest("a, button, summary, label, [role=button]")));
+    px = e.clientX; py = e.clientY;
+    ax(px); ay(py);
+    evaluer(e.target, px, py, false);
   }, { passive: true });
-  window.addEventListener("scroll", () => { if (imgLoupe) { imgLoupe = null; loupe.classList.remove("actif"); anneau.classList.remove("cache"); } }, { passive: true });
+  /* à appeler quand le contenu change sous un curseur immobile */
+  ctx.rafraichirLoupe = function (eteindreSeulement) {
+    if (eteindreSeulement || px < 0) { eteindre(); return; }
+    evaluer(document.elementFromPoint(px, py), px, py, true);
+  };
+  window.addEventListener("scroll", () => { if (imgLoupe) eteindre(); }, { passive: true });
   document.addEventListener("pointerleave", () => { anneau.classList.remove("actif"); loupe.classList.remove("actif"); });
 
   /* boutons magnétiques */

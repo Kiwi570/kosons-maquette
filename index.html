@@ -26,15 +26,15 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/fraunces-opsz.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v=3">
-<link rel="modulepreload" href="/assets/js/main.js?v=3">
-<link rel="modulepreload" href="/assets/js/noyau.js?v=3">
-<link rel="modulepreload" href="/assets/js/effets.js?v=3">
-<link rel="modulepreload" href="/assets/js/papier.js?v=3">
-<link rel="modulepreload" href="/assets/js/accueil.js?v=3">
+<link rel="stylesheet" href="/assets/css/site.css?v=4">
+<link rel="modulepreload" href="/assets/js/main.js?v=4">
+<link rel="modulepreload" href="/assets/js/noyau.js?v=4">
+<link rel="modulepreload" href="/assets/js/effets.js?v=4">
+<link rel="modulepreload" href="/assets/js/accueil.js?v=4">
 <script>
 (function(){var d=document.documentElement,c=null;try{c=localStorage.getItem("kosons-calme")}catch(e){}
-if(c==="1"||(c===null&&window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches))d.classList.add("calme");
+var calme=c==="1"||(c===null&&window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);if(calme)d.classList.add("calme");
+try{if(!calme&&sessionStorage.getItem("kosons-rideau")==="1")d.classList.add("rideau-actif")}catch(e){}
 setTimeout(function(){d.classList.remove("chargement")},2500);})();
 </script>
 </head>
@@ -98,35 +98,35 @@ setTimeout(function(){d.classList.remove("chargement")},2500);})();
 <div class="cadre">
 <div class="nuancier-intro planche-marge"><h2 id="titre-prestations">Mes prestations</h2><p>Six savoir-faire, un même atelier. Chaque prix est celui affiché sur la page tarifs.</p></div>
 <div class="nuancier-fenetre"><div class="nuancier-piste"><a class="lame lame--petrole" href="/tarifs#identite">
-<span class="lame-puce" aria-hidden="true"><img class="" src="/assets/img/ambiance/prestations-texture-petrole-784.webp" srcset="/assets/img/ambiance/prestations-texture-petrole-400.webp 400w, /assets/img/ambiance/prestations-texture-petrole-784.webp 784w" sizes="(max-width: 760px) 76vw, 22vw" width="784" height="980" alt="" loading="lazy" decoding="async"></span>
-<span class="lame-ref" aria-hidden="true"><b>Kosons 21575A</b><span>Pétrole</span></span>
-<span class="lame-visuel"><img class="" src="/assets/img/r/maghair-zen-960.webp" srcset="/assets/img/r/maghair-zen-480.webp 480w, /assets/img/r/maghair-zen-960.webp 960w, /assets/img/r/maghair-zen-1080.webp 1080w" sizes="(max-width: 760px) 70vw, 22vw" width="1080" height="1440" alt="Maghair Zen, logo" loading="lazy" decoding="async" data-loupe="/assets/img/r/maghair-zen-1080.webp" ></span>
-<span class="lame-texte"><h3>Identité visuelle</h3><span class="p">L’ADN de votre marque : logotype, typographies, couleurs. Les codes qui vous rendent unique.</span><span class="lame-prix"><strong>dès 495 €</strong><span>logo</span></span></span>
+<div class="lame-puce" aria-hidden="true"><img class="" src="/assets/img/ambiance/prestations-texture-petrole-784.webp" srcset="/assets/img/ambiance/prestations-texture-petrole-400.webp 400w, /assets/img/ambiance/prestations-texture-petrole-784.webp 784w" sizes="(max-width: 760px) 76vw, 22vw" width="784" height="980" alt="" loading="lazy" decoding="async"></div>
+<div class="lame-ref" aria-hidden="true"><b>Kosons 21575A</b><span>Pétrole</span></div>
+<div class="lame-visuel"><img class="" src="/assets/img/r/maghair-zen-960.webp" srcset="/assets/img/r/maghair-zen-480.webp 480w, /assets/img/r/maghair-zen-960.webp 960w, /assets/img/r/maghair-zen-1080.webp 1080w" sizes="(max-width: 760px) 70vw, 22vw" width="1080" height="1440" alt="Maghair Zen, logo" loading="lazy" decoding="async" ></div>
+<div class="lame-texte"><h3>Identité visuelle</h3><p class="p">L’ADN de votre marque : logotype, typographies, couleurs. Les codes qui vous rendent unique.</p><div class="lame-prix"><strong>dès 495 €</strong><span>logo</span></div></div>
 </a><a class="lame lame--rouge" href="/tarifs#packaging">
-<span class="lame-puce" aria-hidden="true"><img class="" src="/assets/img/ambiance/prestations-texture-rouge-784.webp" srcset="/assets/img/ambiance/prestations-texture-rouge-400.webp 400w, /assets/img/ambiance/prestations-texture-rouge-784.webp 784w" sizes="(max-width: 760px) 76vw, 22vw" width="784" height="980" alt="" loading="lazy" decoding="async"></span>
-<span class="lame-ref" aria-hidden="true"><b>Kosons D92315</b><span>Rouge K</span></span>
-<span class="lame-visuel"><img class="" src="/assets/img/r/pineau-les-grands-champs-960.webp" srcset="/assets/img/r/pineau-les-grands-champs-480.webp 480w, /assets/img/r/pineau-les-grands-champs-960.webp 960w, /assets/img/r/pineau-les-grands-champs-1024.webp 1024w" sizes="(max-width: 760px) 70vw, 22vw" width="1024" height="1536" alt="Parcelle Les Grands Champs, étiquette de pineau" loading="lazy" decoding="async" data-loupe="/assets/img/r/pineau-les-grands-champs-1024.webp" ></span>
-<span class="lame-texte"><h3>Étiquettes & packaging</h3><span class="p">Une étiquette qui raconte le terroir et attire l’œil en rayon : cépage, millésime, origine.</span><span class="lame-prix"><strong>dès 350 €</strong><span>étiquette</span></span></span>
+<div class="lame-puce" aria-hidden="true"><img class="" src="/assets/img/ambiance/prestations-texture-rouge-784.webp" srcset="/assets/img/ambiance/prestations-texture-rouge-400.webp 400w, /assets/img/ambiance/prestations-texture-rouge-784.webp 784w" sizes="(max-width: 760px) 76vw, 22vw" width="784" height="980" alt="" loading="lazy" decoding="async"></div>
+<div class="lame-ref" aria-hidden="true"><b>Kosons D92315</b><span>Rouge K</span></div>
+<div class="lame-visuel"><img class="" src="/assets/img/r/pineau-les-grands-champs-960.webp" srcset="/assets/img/r/pineau-les-grands-champs-480.webp 480w, /assets/img/r/pineau-les-grands-champs-960.webp 960w, /assets/img/r/pineau-les-grands-champs-1024.webp 1024w" sizes="(max-width: 760px) 70vw, 22vw" width="1024" height="1536" alt="Parcelle Les Grands Champs, étiquette de pineau" loading="lazy" decoding="async" ></div>
+<div class="lame-texte"><h3>Étiquettes & packaging</h3><p class="p">Une étiquette qui raconte le terroir et attire l’œil en rayon : cépage, millésime, origine.</p><div class="lame-prix"><strong>dès 350 €</strong><span>étiquette</span></div></div>
 </a><a class="lame lame--sable" href="/tarifs#print">
-<span class="lame-puce" aria-hidden="true"><img class="" src="/assets/img/ambiance/prestations-texture-sable-784.webp" srcset="/assets/img/ambiance/prestations-texture-sable-400.webp 400w, /assets/img/ambiance/prestations-texture-sable-784.webp 784w" sizes="(max-width: 760px) 76vw, 22vw" width="784" height="980" alt="" loading="lazy" decoding="async"></span>
-<span class="lame-ref" aria-hidden="true"><b>Kosons CDAE7C</b><span>Sable</span></span>
-<span class="lame-visuel"><img class="" src="/assets/img/r/te-hoe-960.webp" srcset="/assets/img/r/te-hoe-480.webp 480w, /assets/img/r/te-hoe-960.webp 960w, /assets/img/r/te-hoe-1600.webp 1600w" sizes="(max-width: 760px) 70vw, 22vw" width="1600" height="1066" alt="Te Hoé masseuse, carte de visite" loading="lazy" decoding="async" data-loupe="/assets/img/r/te-hoe-1600.webp" ></span>
-<span class="lame-texte"><h3>Supports imprimés</h3><span class="p">Cartes de visite, flyers, plaquettes, carterie : le papier reste ce qu’on garde en main.</span><span class="lame-prix"><strong>dès 145 €</strong><span>cartes de visite</span></span></span>
+<div class="lame-puce" aria-hidden="true"><img class="" src="/assets/img/ambiance/prestations-texture-sable-784.webp" srcset="/assets/img/ambiance/prestations-texture-sable-400.webp 400w, /assets/img/ambiance/prestations-texture-sable-784.webp 784w" sizes="(max-width: 760px) 76vw, 22vw" width="784" height="980" alt="" loading="lazy" decoding="async"></div>
+<div class="lame-ref" aria-hidden="true"><b>Kosons CDAE7C</b><span>Sable</span></div>
+<div class="lame-visuel"><img class="" src="/assets/img/r/te-hoe-960.webp" srcset="/assets/img/r/te-hoe-480.webp 480w, /assets/img/r/te-hoe-960.webp 960w, /assets/img/r/te-hoe-1600.webp 1600w" sizes="(max-width: 760px) 70vw, 22vw" width="1600" height="1066" alt="Te Hoé masseuse, carte de visite" loading="lazy" decoding="async" ></div>
+<div class="lame-texte"><h3>Supports imprimés</h3><p class="p">Cartes de visite, flyers, plaquettes, carterie : le papier reste ce qu’on garde en main.</p><div class="lame-prix"><strong>dès 145 €</strong><span>cartes de visite</span></div></div>
 </a><a class="lame lame--encre" href="/tarifs#web">
-<span class="lame-puce" aria-hidden="true"></span>
-<span class="lame-ref" aria-hidden="true"><b>Kosons 1E2122</b><span>Noir</span></span>
-<span class="lame-visuel"><img class="" src="/assets/img/r/vmg-bois-site-960.webp" srcset="/assets/img/r/vmg-bois-site-480.webp 480w, /assets/img/r/vmg-bois-site-960.webp 960w, /assets/img/r/vmg-bois-site-1080.webp 1080w" sizes="(max-width: 760px) 70vw, 22vw" width="1080" height="1080" alt="VMG Bois, site vitrine" loading="lazy" decoding="async" data-loupe="/assets/img/r/vmg-bois-site-1080.webp" ></span>
-<span class="lame-texte"><h3>Site internet</h3><span class="p">Un site vitrine clair, visible 24 h/24, avec un référencement naturel de base.</span><span class="lame-prix"><strong>dès 1 000 €</strong><span>site vitrine</span></span></span>
+<div class="lame-puce" aria-hidden="true"></div>
+<div class="lame-ref" aria-hidden="true"><b>Kosons 1E2122</b><span>Noir</span></div>
+<div class="lame-visuel"><img class="" src="/assets/img/r/vmg-bois-site-960.webp" srcset="/assets/img/r/vmg-bois-site-480.webp 480w, /assets/img/r/vmg-bois-site-960.webp 960w, /assets/img/r/vmg-bois-site-1080.webp 1080w" sizes="(max-width: 760px) 70vw, 22vw" width="1080" height="1080" alt="VMG Bois, site vitrine" loading="lazy" decoding="async" ></div>
+<div class="lame-texte"><h3>Site internet</h3><p class="p">Un site vitrine clair, visible 24 h/24, avec un référencement naturel de base.</p><div class="lame-prix"><strong>dès 1 000 €</strong><span>site vitrine</span></div></div>
 </a><a class="lame lame--magenta" href="/tarifs#web">
-<span class="lame-puce" aria-hidden="true"></span>
-<span class="lame-ref" aria-hidden="true"><b>Kosons F2295B</b><span>Framboise</span></span>
-<span class="lame-visuel"><img class="" src="/assets/img/r/maghair-zen-reseaux-960.webp" srcset="/assets/img/r/maghair-zen-reseaux-480.webp 480w, /assets/img/r/maghair-zen-reseaux-960.webp 960w, /assets/img/r/maghair-zen-reseaux-1080.webp 1080w" sizes="(max-width: 760px) 70vw, 22vw" width="1080" height="1920" alt="Maghair Zen, réseaux sociaux" loading="lazy" decoding="async" data-loupe="/assets/img/r/maghair-zen-reseaux-1080.webp" ></span>
-<span class="lame-texte"><h3>Réseaux sociaux</h3><span class="p">Posts, stories, bannières et newsletters pour faire vivre votre marque chaque mois.</span><span class="lame-prix"><strong>dès 500 €</strong><span>par mois</span></span></span>
+<div class="lame-puce" aria-hidden="true"></div>
+<div class="lame-ref" aria-hidden="true"><b>Kosons F2295B</b><span>Framboise</span></div>
+<div class="lame-visuel"><img class="" src="/assets/img/r/maghair-zen-reseaux-960.webp" srcset="/assets/img/r/maghair-zen-reseaux-480.webp 480w, /assets/img/r/maghair-zen-reseaux-960.webp 960w, /assets/img/r/maghair-zen-reseaux-1080.webp 1080w" sizes="(max-width: 760px) 70vw, 22vw" width="1080" height="1920" alt="Maghair Zen, réseaux sociaux" loading="lazy" decoding="async" ></div>
+<div class="lame-texte"><h3>Réseaux sociaux</h3><p class="p">Posts, stories, bannières et newsletters pour faire vivre votre marque chaque mois.</p><div class="lame-prix"><strong>dès 500 €</strong><span>par mois</span></div></div>
 </a><a class="lame lame--ivoire" href="/tarifs#print">
-<span class="lame-puce" aria-hidden="true"></span>
-<span class="lame-ref" aria-hidden="true"><b>Kosons F2EDE3</b><span>Ivoire</span></span>
-<span class="lame-visuel"><img class="" src="/assets/img/r/estelle-covering-900.webp" srcset="/assets/img/r/estelle-covering-480.webp 480w, /assets/img/r/estelle-covering-900.webp 900w" sizes="(max-width: 760px) 70vw, 22vw" width="900" height="2000" alt="L’Instant d’Estelle, covering de véhicule" loading="lazy" decoding="async" data-loupe="/assets/img/r/estelle-covering-900.webp" ></span>
-<span class="lame-texte"><h3>Les petits +</h3><span class="p">Signalétique, kakemono, covering de véhicule, goodies : visible partout où vous êtes.</span><span class="lame-prix"><strong>dès 175 €</strong><span>goodies</span></span></span>
+<div class="lame-puce" aria-hidden="true"></div>
+<div class="lame-ref" aria-hidden="true"><b>Kosons F2EDE3</b><span>Ivoire</span></div>
+<div class="lame-visuel"><img class="" src="/assets/img/r/estelle-covering-900.webp" srcset="/assets/img/r/estelle-covering-480.webp 480w, /assets/img/r/estelle-covering-900.webp 900w" sizes="(max-width: 760px) 70vw, 22vw" width="900" height="2000" alt="L’Instant d’Estelle, covering de véhicule" loading="lazy" decoding="async" ></div>
+<div class="lame-texte"><h3>Les petits +</h3><p class="p">Signalétique, kakemono, covering de véhicule, goodies : visible partout où vous êtes.</p><div class="lame-prix"><strong>dès 175 €</strong><span>goodies</span></div></div>
 </a></div></div>
 <div class="nuancier-indicateur" aria-hidden="true"><span class="jauge"><i></i></span><span>Faites défiler pour ouvrir le nuancier</span></div>
 </div>
@@ -277,6 +277,6 @@ setTimeout(function(){d.classList.remove("chargement")},2500);})();
 <script defer src="/assets/js/lib/gsap.min.js"></script>
 <script defer src="/assets/js/lib/ScrollTrigger.min.js"></script>
 <script defer src="/assets/js/lib/SplitText.min.js"></script>
-<script type="module" src="/assets/js/main.js?v=3"></script>
+<script type="module" src="/assets/js/main.js?v=4"></script>
 </body>
 </html>
