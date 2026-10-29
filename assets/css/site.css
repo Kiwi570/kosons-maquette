@@ -249,30 +249,52 @@ html.avec-curseur input, html.avec-curseur textarea, html.avec-curseur select, h
 .court-tel { display: none; }
 .ouverture .tirages { grid-column: 2; grid-row: 1; position: relative; height: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
 .ouverture .tirage--principal { position: relative; height: min(100%, 76vh); aspect-ratio: 1365 / 2048; max-width: 100%; background: #fff; padding: clamp(6px, 1vh, 12px); }
+@supports (height: 1cqh) {
+  .ouverture .tirages { container-type: size; }
+  .ouverture .tirage--principal { height: min(100cqh, 76vh, 100cqw * 2048 / 1365); max-width: none; }
+}
 .ouverture .tirage--second { position: absolute; left: -2%; bottom: 6%; width: min(46%, 300px); aspect-ratio: 1600 / 1067; background: #fff; padding: 6px; transform: rotate(-4deg); }
-.ouverture .tirage figcaption { position: absolute; right: calc(100% + 22px); top: 0; width: 12.5em; margin: 0; text-align: right; }
+.ouverture .tirage figcaption { position: absolute; right: -14px; top: 26px; width: max-content; max-width: 15em; margin: 0; padding: 8px 12px; background: var(--papier); box-shadow: 0 8px 18px -10px rgba(40, 30, 20, .55); transform: rotate(2deg); }
 .ouverture .pied-ouverture { grid-column: 1 / -1; grid-row: 2; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: .86rem; font-stretch: 85%; color: var(--encre-2); }
 .ouverture .pied-ouverture .defiler { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; min-height: 44px; }
 .defiler .trait { width: 1.5px; height: 28px; background: currentColor; transform-origin: top; animation: trait 2.2s var(--ease) infinite; }
 @keyframes trait { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 .ouverture .mire--1 { right: calc(var(--gouttiere) * .5); top: calc(var(--entete-h) + 14px); }
 
-@media (max-width: 859px) {
+/* tablette et fenêtre étroite : deux colonnes resserrées */
+@media (max-width: 999px) { .ouverture .tirage figcaption { display: none; } }
+@media (min-width: 600px) and (max-width: 999px) {
+  .ouverture .cadre { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+  .titre-ouverture { font-size: clamp(2.4rem, min(8.4vw, 12vh), 6rem); }
+  .ouverture .chapo { font-size: clamp(.98rem, 2.2vw, 1.15rem); }
+  .ouverture .tirage--second { left: -10%; bottom: 5%; width: min(58%, 230px); }
+}
+@supports (height: 1cqh) {
+  @media (min-width: 600px) and (max-width: 999px) and (min-height: 521px) {
+    /* la petite photo s'accroche au bas de la bouteille, quelle que soit la hauteur de la colonne */
+    .ouverture .tirage--second { bottom: auto; top: calc(50cqh + min(100cqh, 76vh, 100cqw * 2048 / 1365) / 2 - min(58cqw, 230px) * .52); }
+  }
+}
+/* téléphone : texte en haut, tirages dimensionnés par la hauteur disponible */
+@media (max-width: 599px) {
   .ouverture .cadre { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; gap: 14px; }
   .ouverture .texte { grid-row: 1; }
-  .titre-ouverture { font-size: clamp(2.9rem, min(13.5vw, 8.4vh), 5.6rem); }
+  .titre-ouverture { font-size: clamp(2.5rem, min(13.5vw, 8.4vh), 5.6rem); margin-bottom: clamp(10px, 2vh, 22px); }
   .ouverture .tirages { grid-column: 1; grid-row: 2; justify-content: flex-end; }
-  .ouverture .tirage--principal { height: 100%; }
-  .ouverture .tirage--second { left: 0; bottom: 10%; width: min(52%, 280px); }
-  .ouverture .tirage figcaption { display: none; }
+  .ouverture .tirage--second { left: 0; bottom: 6%; height: min(64%, 210px); width: auto; max-width: 56%; }
   .ouverture .pied-ouverture { grid-row: 3; }
   .ouverture .signature { display: none; }
   .ouverture .bouton { padding: .6em 1.05em; font-size: .95rem; }
   .ouverture .ambiance::after { background: linear-gradient(180deg, rgba(242, 237, 227, .7), rgba(242, 237, 227, 0) 55%); }
 }
-@media (max-width: 420px) { .long-tel { display: none; } .court-tel { display: inline; } }
-@media (max-width: 859px) and (max-height: 700px) { .ouverture .chapo { display: none; } }
-
+@media (max-width: 599px) and (max-height: 760px) { .ouverture .chapo { display: none; } .ouverture .pied-ouverture { display: none; } .ouverture .cadre { grid-template-rows: auto minmax(0, 1fr); } }
+@media (max-width: 374px) { .ouverture .actions .bouton:first-child { display: none; } }
+/* écrans bas (téléphone à l'horizontale) : l'essentiel seulement */
+@media (min-width: 600px) and (max-height: 520px) {
+  .ouverture .chapo, .ouverture .signature, .ouverture .pied-ouverture { display: none; }
+  .ouverture .cadre { grid-template-rows: minmax(0, 1fr); }
+  .titre-ouverture { font-size: clamp(2rem, 14vh, 4.4rem); }
+}
 /* ruban */
 .ruban { position: relative; overflow: hidden; background: var(--petrole); color: var(--papier); padding: clamp(14px, 2vw, 24px) 0; border-block: 1px solid var(--petrole-fonce); }
 .ruban-piste { display: flex; width: max-content; will-change: transform; }
@@ -574,6 +596,13 @@ html.verrou { overflow: hidden; }
 .ouverture-t .taux { display: flex; gap: clamp(24px, 4vw, 64px); margin: clamp(16px, 3vh, 34px) 0; flex-wrap: wrap; }
 .ouverture-t .taux div { font-size: .92rem; color: var(--encre-2); }
 .ouverture-t .taux strong { display: block; font-family: var(--serif); font-weight: 380; font-size: clamp(2.2rem, min(4.4vw, 8vh), 4.2rem); line-height: 1; color: var(--encre); }
+@media (max-width: 599px), (max-height: 520px) {
+  .ouverture-t .sommaire { flex-wrap: nowrap; overflow-x: auto; margin-right: calc(var(--gouttiere) * -1); padding: 2px var(--gouttiere) 4px 2px; scrollbar-width: none; }
+  .ouverture-t .sommaire::-webkit-scrollbar { display: none; }
+  .ouverture-t .sommaire a { flex: none; }
+}
+@media (max-height: 620px) { .ouverture-t .chapo { display: none; } }
+@media (max-height: 520px) { .ouverture-t h1 { font-size: clamp(2.2rem, 15vh, 4rem); } .ouverture-t .taux { margin: 10px 0 14px; } .ouverture-t .taux strong { font-size: clamp(1.7rem, 9vh, 2.6rem); } }
 .sommaire { display: flex; flex-wrap: wrap; gap: 8px 10px; }
 .sommaire a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1.5px solid var(--encre); border-radius: 999px; text-decoration: none; font-weight: 500; font-stretch: 90%; background: rgba(242, 237, 227, .6); }
 .sommaire a:hover { background: var(--encre); color: var(--papier); }

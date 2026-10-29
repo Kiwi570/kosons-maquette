@@ -1,5 +1,5 @@
 /* Réalisations : table lumineuse, filtres animés (Flip), visionneuse avec loupe. */
-import { introReperage, rouleau } from "./effets.js?v=2";
+import { introReperage, rouleau } from "./effets.js?v=3";
 
 export function realisations(ctx) {
   const { gsap, calme } = ctx;

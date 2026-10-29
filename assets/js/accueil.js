@@ -1,7 +1,7 @@
 /* Accueil : ouverture, ruban, nuancier, méthode, planche-contact, bon de commande. */
-import { introReperage, tracerCoupes, rouleau, tamponner, aLEntree } from "./effets.js?v=2";
-import { papierVivant } from "./papier.js?v=2";
-import { amortir, clamp } from "./noyau.js?v=2";
+import { introReperage, tracerCoupes, rouleau, tamponner, aLEntree } from "./effets.js?v=3";
+import { papierVivant } from "./papier.js?v=3";
+import { amortir, clamp } from "./noyau.js?v=3";
 
 const CONDITION_EPINGLE = "(min-width: 900px) and (min-height: 520px)";
 

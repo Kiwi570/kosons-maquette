@@ -1,5 +1,5 @@
 /* Effets d'imprimerie : repères de coupe, repérage des plaques, rouleau encreur, tampons, compteurs. */
-import { clamp } from "./noyau.js?v=2";
+import { clamp } from "./noyau.js?v=3";
 
 const SVG = "http://www.w3.org/2000/svg";
 const COINS = ["hg", "hd", "bg", "bd"];
